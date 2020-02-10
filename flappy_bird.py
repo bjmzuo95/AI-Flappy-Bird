@@ -1,3 +1,7 @@
+"""
+The classic game of flappy bird. 
+Make with python and pygame. 
+"""
 import pygame
 import neat
 import random
@@ -10,6 +14,7 @@ WIN_HEIGHT = 800
 
 GEN = 0
 
+# load all required images
 BIRD_IMGS = [
     pygame.transform.scale2x(pygame.image.load('./imgs/bird1.png')),
     pygame.transform.scale2x(pygame.image.load('./imgs/bird2.png')),
@@ -22,12 +27,19 @@ BG_IMG = pygame.transform.scale2x(pygame.image.load('./imgs/bg.png'))
 STAT_FONT = pygame.font.SysFont('comicsans', 50)
 
 class Bird:
+    """
+    represents a bird object
+    """
     IMGS = BIRD_IMGS
     MAX_ROTATION = 25
     ROT_VEL = 20
     ANIMATION_TIME = 5
 
     def __init__(self, x, y):
+        """
+        initialize a bird object
+        return: None
+        """
         self.x = x
         self.y = y
         self.tilt = 0
@@ -38,11 +50,19 @@ class Bird:
         self.img = self.IMGS[0]
 
     def jump(self):
+        """
+        make the bird jump
+        return: None
+        """
         self.vel = -10.5
         self.tick_count = 0
         self.height = self.y
         
     def move(self):
+        """
+        make the bird move
+        return: None
+        """
         self.tick_count += 1
         dis = self.vel * self.tick_count + 1.5 * self.tick_count ** 2
         
@@ -61,6 +81,10 @@ class Bird:
                 self.tilt -= self.ROT_VEL
     
     def draw(self, win):
+        """
+        draw the bird
+        return: None
+        """
         self.img_count += 1
 
         if self.img_count < self.ANIMATION_TIME:
