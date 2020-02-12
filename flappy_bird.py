@@ -28,7 +28,7 @@ STAT_FONT = pygame.font.SysFont('comicsans', 50)
 
 class Bird:
     """
-    represents a bird object
+    represent a bird object
     """
     IMGS = BIRD_IMGS
     MAX_ROTATION = 25
@@ -64,6 +64,8 @@ class Bird:
         return: None
         """
         self.tick_count += 1
+
+        # downward animation
         dis = self.vel * self.tick_count + 1.5 * self.tick_count ** 2
         
         if dis >= 16:
@@ -87,6 +89,7 @@ class Bird:
         """
         self.img_count += 1
 
+        # loop through three images
         if self.img_count < self.ANIMATION_TIME:
             self.img = self.IMGS[0]
         elif self.img_count < self.ANIMATION_TIME * 2:
@@ -99,6 +102,7 @@ class Bird:
             self.img = self.IMGS[0]
             self.img_count = 0
 
+        # when diving, stop flapping
         if self.tilt <= -80:
             self.img = self.IMGS[1]
             self.img_count = self.ANIMATION_TIME * 2
@@ -108,13 +112,24 @@ class Bird:
         win.blit(rotated_image, new_rect.topleft)
 
     def get_mask(self):
+        """
+        get the mask for the current bird image
+        return: None
+        """
         return pygame.mask.from_surface(self.img)
 
 class Pipe:
+    """
+    represent a pipe object
+    """
     GAP = 200
     VEL = 5
 
     def __init__(self, x):
+        """
+        initialize a pipe object
+        return: None
+        """
         self.x = x
         self.height = 0
 
@@ -127,18 +142,34 @@ class Pipe:
         self.set_height()
 
     def set_height(self):
+        """
+        set the height of the pipe
+        return: None
+        """
         self.height = random.randrange(50, 450)
         self.top = self.height - self.PIPE_TOP.get_height()
         self.bottom = self.height + self.GAP
 
     def move(self):
+        """
+        make the pipe move
+        return: None
+        """
         self.x -= self.VEL
 
     def draw(self, win):
+        """
+        draw both the top and bottom of the pipe
+        return: None
+        """
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
 
     def collide(self, bird):
+        """
+        check if a point is colliding with other pipes
+        return: Boolean
+        """
         bird_mask = bird.get_mask()
         top_mask = pygame.mask.from_surface(self.PIPE_TOP)
         bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
