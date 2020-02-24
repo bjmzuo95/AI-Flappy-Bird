@@ -186,16 +186,27 @@ class Pipe:
         return False
 
 class Base:
+    """
+    represent the moving ground
+    """
     VEL = 5
     WIDTH = BASE_IMG.get_width()
     IMG = BASE_IMG
 
     def __init__(self, y):
+        """
+        initialize the base object
+        return: None
+        """
         self.y = y
         self.x1 = 0
         self.x2 = self.WIDTH
         
     def move(self):
+        """
+        make the base move
+        return: None
+        """
         self.x1 -= self.VEL
         self.x2 -= self.VEL
 
@@ -206,11 +217,18 @@ class Base:
             self.x2 = self.x1 + self.WIDTH
 
     def draw(self, win):
+        """
+        draw the floor including two images that move together.
+        return: None
+        """
         win.blit(self.IMG, (self.x1, self.y))
         win.blit(self.IMG, (self.x2, self.y))
-        
 
 def draw_window(win, birds, pipes, base,score, gen):
+    """
+    draws the windows for the main game loop
+    return: None
+    """
     win.blit(BG_IMG, (0, 0))
 
     for pipe in pipes:
@@ -228,6 +246,10 @@ def draw_window(win, birds, pipes, base,score, gen):
     pygame.display.update()
 
 def main(genomes, config):
+    """
+    runs the game
+    return: None
+    """
     global GEN
     GEN += 1
     nets = []
@@ -265,7 +287,7 @@ def main(genomes, config):
             run = False
             break
 
-        for x, bird in enumerate(birds):
+        for x, bird in enumerate(birds):   # give each bird a fitness of 0.1 for each frame it stays alive
             bird.move()
             ge[x].fitness += 0.1
 
@@ -275,7 +297,7 @@ def main(genomes, config):
 
         rem = []
         add_pipe = False
-        for pipe in pipes:
+        for pipe in pipes:    # check for collision
             for x, bird in enumerate(birds):
                 if pipe.collide(bird):
                     ge[x].fitness -= 1
@@ -292,7 +314,7 @@ def main(genomes, config):
 
             pipe.move()
 
-        if add_pipe:
+        if add_pipe:   # record the final score
             score += 1
             for g in ge:
                 g.fitness += 5
@@ -311,6 +333,10 @@ def main(genomes, config):
         draw_window(win, birds, pipes, base, score, GEN)
 
 def run(config_path):
+    """
+    runs the NEAT algorithm to train a neural network to play flappy bird.
+    :return: None
+    """
     config = neat.config.Config(neat.DefaultGenome, 
     neat.DefaultReproduction, neat.DefaultSpeciesSet, 
     neat.DefaultStagnation, config_path)
